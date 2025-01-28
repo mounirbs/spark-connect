@@ -1,0 +1,80 @@
+# Source: https://github.com/bitnami/containers/tree/main/bitnami/spark#readme
+# https://medium.com/@yssmelo/spark-connect-launch-spark-applications-anywhere-with-the-client-server-architecture-dbt-f99399c566fe
+
+services:
+  spark-master:
+    image: bitnami/spark:3.5.0
+    container_name: spark-master
+    hostname: spark-master    
+    environment:
+      - SPARK_MODE=master
+      #- SPARK_DAEMON_MEMORY=4g
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+      #- SPARK_MASTER_OPTS="-Dspark.master.rest.enabled=true"
+    ports:
+      # Spark UI 	
+      - '8080:8080'
+      # Spark REST API
+      #- '6066:6066'
+      # Spark SUBMIT
+      - '7077:7077'
+    volumes:
+      - ./python:/python
+    networks:
+      - sparknet 
+
+  spark-worker:
+    image: bitnami/spark:3.5.0
+    container_name: spark-worker
+    hostname: spark-worker
+    environment:
+      - SPARK_MODE=worker
+      #- SPARK_WORKER_MEMORY=4g
+      #- SPARK_WORKER_CORES=1      
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark 
+    volumes:
+      - ./python:/python
+    depends_on:
+      - spark-master      
+    networks:
+      - sparknet  
+
+  spark-connect:
+    image: bitnami/spark:3.5.0
+    container_name: spark-connect
+    hostname: spark-connect
+    #environment:
+      #- SPARK_MODE=master
+      #- SPARK_DAEMON_MEMORY=4g
+      #- SPARK_RPC_AUTHENTICATION_ENABLED=no
+      #- SPARK_RPC_ENCRYPTION_ENABLED=no
+      #- SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      #- SPARK_SSL_ENABLED=no
+      #- SPARK_USER=spark
+    ports:
+      - '4040:4040'
+      - '15002:15002'
+    #build:
+      #dockerfile: ./Dockerfile       
+    command: ["sh", "-c", "/opt/bitnami/spark/sbin/start-connect-server.sh --jars /opt/bitnami/spark/jars/spark-connect_2.12-3.5.0.jar && tail -f /dev/null"]
+    volumes:
+      - ./python:/python
+      - ./spark/jars/spark-connect_2.12-3.5.0.jar:/opt/bitnami/spark/jars/spark-connect_2.12-3.5.0.jar
+      - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+    depends_on:
+      - spark-master      
+    networks:
+      - sparknet  
+
+networks:
+  sparknet:
+    driver: bridge
