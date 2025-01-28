@@ -6,9 +6,7 @@ from pyspark.sql import SparkSession
 
 #SparkSession.builder.master("localhost:7077").getOrCreate().stop()
 
-spark = SparkSession.builder.remote("sc://localhost:15002").getOrCreate()
-
-app_name = "simple-app-pandas"
+spark = SparkSession.builder.remote("sc://localhost:15002").appName("SimpleAppPandas").getOrCreate()
 
 # Creating a DataFrame from a dictionary
 data = {
@@ -19,3 +17,5 @@ data = {
 
 df = pd.DataFrame(data)
 print(df)
+
+#spark.stop()

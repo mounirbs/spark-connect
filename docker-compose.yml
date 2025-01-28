@@ -17,7 +17,7 @@ services:
       #- SPARK_MASTER_OPTS="-Dspark.master.rest.enabled=true"
     ports:
       # Spark UI 	
-      - '8080:8080'
+      - '80:8080'
       # Spark REST API
       #- '6066:6066'
       # Spark SUBMIT
@@ -61,7 +61,7 @@ services:
       #- SPARK_SSL_ENABLED=no
       #- SPARK_USER=spark
     ports:
-      - '4040:4040'
+      - '443:4040'
       - '15002:15002'
     #build:
       #dockerfile: ./Dockerfile       
