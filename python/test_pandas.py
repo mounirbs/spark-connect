@@ -1,6 +1,8 @@
 #requires pyspark[connect]==3.5.0
+import os
+os.environ["PYARROW_IGNORE_TIMEZONE"]="1"
 
-import pandas as pd
+import pyspark.pandas as ps
 
 from pyspark.sql import SparkSession
 
@@ -15,7 +17,7 @@ data = {
     'City': ['New York', 'Los Angeles', 'Chicago']
 }
 
-df = pd.DataFrame(data)
+df = ps.DataFrame(data)
 print(df)
 
-#spark.stop()
+spark.stop()
