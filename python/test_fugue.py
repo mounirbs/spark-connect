@@ -27,3 +27,4 @@ out = transform(sdf,
 # out is a Spark DataFrame
 out.show()
 
+spark.stop()

@@ -1,52 +1,120 @@
 services:
   spark-master:
-    image: apache/spark:3.5.4
+    image: mounirbs/spark-python3-java17:3.5.4
+    build:
+      context: ./
+      dockerfile: ./spark/Dockerfile
     container_name: spark-master
     hostname: spark-master
     user: root
     ports:
-      - "80:8080"
+      - "8080:8080"
       - "7077:7077"
     environment:
       - SPARK_MASTER_HOST=spark-master
       - SPARK_MASTER_PORT=7077
       - SPARK_MASTER_WEBUI_PORT=8080
+      - SPARK_DAEMON_MEMORY=2g
+      - SPARK_MASTER_OPTS="-Dspark.master.rest.enabled=false"
+      - PYSPARK_PYTHON=python3
     entrypoint: 
       - "bash"
       - "-c"
       - "/opt/spark/sbin/start-master.sh && tail -f /dev/null"
     volumes:
-      - ./data:/opt/spark/work-dir/spark-warehouse/data:rw
+      - ./logs:/opt/spark/logs
+    networks:
+      - sparknet
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2g
 
   spark-connect:
-    image: apache/spark:3.5.4
+    image: mounirbs/spark-python3-java17:3.5.4
     container_name: spark-connect
     hostname: spark-connect
     user: root
     ports:
-      - "443:4040"
+      - "4040:4040"
       - "15002:15002"
     depends_on:
       - spark-master
     volumes:
-      - ./spark/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
       - ./spark/jars/spark-connect_2.12-3.5.4.jar:/opt/spark/jars/spark-connect_2.12-3.5.4.jar
-      - ./data:/opt/spark/work-dir/spark-warehouse/data:rw
+      - ./logs:/opt/spark/logs
+      - ./data:/data:rw
     command: 
       - "bash"
       - "-c"
-      - "/opt/spark/sbin/start-connect-server.sh --jars /opt/spark/jars/spark-connect_2.12-3.5.4.jar && tail -f /dev/null"
+      # master: spark master endpoint
+      # deploy-mode: Whether to launch the driver program locally ("client") or on one of the worker machines inside the cluster ("cluster"). Only client is supported
+      # driver-memory: Memory for driver (e.g. 1000M, 2G) (Default: 1024M)
+      # driver-cores: Cluster deploy mode only. Number of cores used by the driver, only in cluster mode (Default: 1)
+      # executor-memory: Memory per executor (e.g. 1000M, 2G) (Default: 1G)
+      # executor-core: Spark standalone, YARN and Kubernetes only. Number of cores used by each executor. (Default: 1 in YARN and K8S modes, or all available cores on the worker in standalone mode)
+      - "/opt/spark/sbin/start-connect-server.sh --master spark://spark-master:7077 --deploy-mode client --driver-memory 2G --executor-memory 3G --executor-cores 1 --jars /opt/spark/jars/spark-connect_2.12-3.5.4.jar && tail -f /dev/null"
+    networks:
+      - sparknet
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2g
 
-  spark-worker:
-    image: apache/spark:3.5.4
-    container_name: spark-worker
-    hostname: spark-worker
+  spark-worker-1:
+    image: mounirbs/spark-python3-java17:3.5.4
+    container_name: spark-worker-1
+    hostname: spark-worker-1
     user: root
     depends_on:
       - spark-master
+    environment:     
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=3g
+      - PYSPARK_PYTHON=python3
     entrypoint:
       - "bash" 
       - "-c"
       - "/opt/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"
     volumes:
-      - ./data:/opt/spark/work-dir/spark-warehouse/data:rw
+      - ./data:/data:rw
+      - ./logs:/opt/spark/logs
+    networks:
+      - sparknet
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 3g
+
+  spark-worker-2:
+    image: mounirbs/spark-python3-java17:3.5.4
+    container_name: spark-worker-2
+    hostname: spark-worker-2
+    user: root
+    depends_on:
+      - spark-master
+    environment: 
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=3g
+      - PYSPARK_PYTHON=python3
+    entrypoint:
+      - "bash"
+      - "-c"
+      - "/opt/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /dev/null"
+    volumes:
+      - ./data:/data:rw
+      - ./logs:/opt/spark/logs
+    networks:
+      - sparknet
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 3g
+
+networks:
+  sparknet:
+    driver: bridge

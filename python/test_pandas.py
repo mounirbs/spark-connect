@@ -8,13 +8,13 @@ from pyspark.sql import SparkSession
 
 #SparkSession.builder.master("localhost:7077").getOrCreate().stop()
 
-spark = SparkSession.builder.remote("sc://localhost:15002").appName("SimpleAppPandas").getOrCreate()
+spark = SparkSession.builder.remote("sc://localhost:15002").appName("SimpleAppPandasOnSpark").getOrCreate()
 
 # Creating a DataFrame from a dictionary
 data = {
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [25, 30, 35],
-    'City': ['New York', 'Los Angeles', 'Chicago']
+    'name': ['Pandas', 'On', 'Spark'],
+    'key': [1, 2, 3],
+    'value': ['asdnaP', 'nO', 'krapS']
 }
 
 df = ps.DataFrame(data)
