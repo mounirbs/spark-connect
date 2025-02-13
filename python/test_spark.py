@@ -1,5 +1,3 @@
-#requires pyspark[connect]==3.5.0
-
 from pyspark.sql import SparkSession
 
 #SparkSession.builder.master("localhost:7077").getOrCreate().stop()

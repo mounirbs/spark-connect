@@ -1,4 +1,4 @@
-FROM spark:3.5.4-java17-python3
+FROM spark:4.0.0-preview2-java21-python3
 
 USER root
 # Install Python Dependencies

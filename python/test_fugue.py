@@ -1,4 +1,3 @@
-#requires pyspark[connect]==3.5.0
 import os
 os.environ["PYARROW_IGNORE_TIMEZONE"]="1"
 
