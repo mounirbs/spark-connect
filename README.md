@@ -2,7 +2,7 @@
 Spark connect provides a local environment for developing Spark applications on Docker. It simulates a Spark cluster and integrates Spark connect to efficiently manage Spark sessions.
 
 ## Tested on
-Spark 3.5.4, Java 17
+Spark 3.5.4, Python 3.10, Java 17
 
 ## Requirements
 - Requires all needed Python packages to be installed in both cluster(workers) and the environment from where the client application is running
