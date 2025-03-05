@@ -1,0 +1,57 @@
+apiVersion: v1
+data:
+  test.csv: |
+    Continent,Country,Capital
+    Africa,Nigeria,Abuja
+    Africa,Egypt,Cairo
+    Africa,South Africa,Pretoria
+    Africa,Kenya,Nairobi
+    Africa,Ghana,Accra
+    Africa,Ethiopia,Addis Ababa
+    Africa,Tanzania,Dodoma
+    Africa,Uganda,Kampala
+    Africa,Algeria,Algiers
+    Africa,Morocco,Rabat
+    Asia,China,Beijing
+    Asia,India,New Delhi
+    Asia,Japan,Tokyo
+    Asia,South Korea,Seoul
+    Asia,Indonesia,Jakarta
+    Asia,Pakistan,Islamabad
+    Asia,Bangladesh,Dhaka
+    Asia,Vietnam,Hanoi
+    Asia,Thailand,Bangkok
+    Asia,Philippines,Manila
+    Europe,Germany,Berlin
+    Europe,France,Paris
+    Europe,United Kingdom,London
+    Europe,Italy,Rome
+    Europe,Spain,Madrid
+    Europe,Ukraine,Kyiv
+    Europe,Poland,Warsaw
+    Europe,Netherlands,Amsterdam
+    Europe,Belgium,Brussels
+    Europe,Greece,Athens
+    North America,United States of America (USA),Washington D.C.
+    North America,Canada,Ottawa
+    North America,Mexico,Mexico City
+    North America,Guatemala,Guatemala City
+    North America,Cuba,Havana
+    North America,Haiti,Port-au-Prince
+    North America,Dominican Republic,Santo Domingo
+    North America,Honduras,Tegucigalpa
+    North America,El Salvador,San Salvador
+    North America,Nicaragua,Managua
+    South America,Brazil,Brasília
+    South America,Argentina,Buenos Aires
+    South America,Colombia,Bogotá
+    South America,Chile,Santiago
+    South America,Peru,Lima
+    South America,Venezuela,Caracas
+    South America,Ecuador,Quito
+    South America,Bolivia,Sucre
+kind: ConfigMap
+metadata:
+  labels:
+    role: worker
+  name: spark-connect-test-csv

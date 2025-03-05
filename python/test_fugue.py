@@ -4,7 +4,7 @@ os.environ["PYARROW_IGNORE_TIMEZONE"]="1"
 
 from pyspark.sql import SparkSession
 
-spark = SparkSession.builder.remote("sc://localhost:15002").appName("SimpleAppPandas").getOrCreate()
+spark = SparkSession.builder.remote("sc://localhost:15002").appName("SimpleAppFugue").getOrCreate()
 
 import pandas as pd
 from typing import Dict

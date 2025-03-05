@@ -1,0 +1,9 @@
+apiVersion: v2
+name: spark-connect
+description: A generated Helm Chart for helm from Skippbox Kompose
+version: 0.0.1
+appVersion: "v_1.0.0_spark_3.5.4"
+keywords:
+  - helm/spark-connect
+sources:
+home:

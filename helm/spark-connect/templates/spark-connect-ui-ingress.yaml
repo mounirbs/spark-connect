@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: spark-connect-ui-ingress
+  namespace: {{ .Values.metadata.namespace }}
+spec:
+ rules:
+  - host: mounir.eastus.cloudapp.azure.com
+    http:
+      paths:
+      - path: /connect
+        pathType: Prefix
+        backend:
+          service:
+            name: spark-connect
+            port:
+              number: {{ .Values.sparkConnect.connectUIPort }}

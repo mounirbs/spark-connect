@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    role: connect
+  name: spark-connect
+  namespace: {{ .Values.metadata.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: connect
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        role: connect
+    spec:
+      containers:
+        - args:
+            - bash
+            - -c
+ # master: spark master endpoint
+ # deploy-mode: Whether to launch the driver program locally ("client") or on one of the worker machines inside the cluster ("cluster"). Only client is supported
+# executor-memory: Memory per executor (e.g. 1000M, 2G) (Default: 1G)
+ # executor-core: Spark standalone, YARN and Kubernetes only. Number of cores used by each executor. (Default: 1 in YARN and K8S modes, or all available cores on the worker in standalone mode)
+            - /opt/spark/sbin/start-connect-server.sh --master spark://spark-master:{{ .Values.sparkMaster.targetSparkMasterPort }} --deploy-mode client --executor-memory 2G --executor-cores 1 --jars /opt/spark/jars/spark-connect_2.12-3.5.4.jar && tail -f /dev/null
+          env:
+            - name: PYSPARK_PYTHON
+              value: python3
+          image: {{ .Values.sparkConnect.image }}
+          name: spark-connect
+          ports:
+            - containerPort: {{ .Values.sparkConnect.connectUIPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.sparkConnect.connectPort }}
+              protocol: TCP
+      hostname: spark-connect
+      restartPolicy: Always

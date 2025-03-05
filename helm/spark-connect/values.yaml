@@ -1,0 +1,29 @@
+metadata:
+  namespace: spark-connect
+general:
+  #ClusterIP, NodePort, LoadBalancer
+  #ClusterIP is supported. Requires also Headless Services (https://kubernetes.io/docs/concepts/services-networking/service/#headless-services)
+  serviceType: ClusterIP
+sparkMaster:
+  # Target ports: port on the pod(s) to forward traffic to
+  # ports: ports of this service
+  targetSparkMasterPort: 7077
+  targetSparkMasterWebuiPort: 8080	
+  targetSparkRestPort: 6066
+  sparkMasterPort: 7077
+  sparkMasterWebuiPort: 8080	
+  sparkRestPort: 6066
+  image: mounirbs/spark-python3-java17:3.5.4
+sparkWorker:
+  replicas: 3
+  sparkWorkerCores: 1
+  sparkWorkerMemory: 2g
+  targetSparkWorkerWebuiPort: 8081
+  sparkWorkerWebuiPort: 8081
+  image: mounirbs/spark-python3-java17:3.5.4
+sparkConnect:
+  targetConnectPort: 15002
+  targetConnectUIPort: 4040
+  connectPort: 15002
+  connectUIPort: 4040
+  image: mounirbs/spark-python3-java17:3.5.4
