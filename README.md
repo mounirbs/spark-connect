@@ -19,6 +19,7 @@ docker compose up -d --build
 
 ### Spark Connect tests
 ```
+kubectl -n spark-connect port-forward svc/spark-connect 15002:15002
 python ./python/test_spark.py
 python ./python/test_pandas.py
 python ./python/test_fugue.py

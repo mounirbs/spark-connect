@@ -16,8 +16,8 @@ sparkMaster:
   image: mounirbs/spark-python3-java17:3.5.4
 sparkWorker:
   replicas: 3
-  sparkWorkerCores: 1
-  sparkWorkerMemory: 2g
+  sparkWorkerCores: 2
+  sparkWorkerMemory: 4g
   targetSparkWorkerWebuiPort: 8081
   sparkWorkerWebuiPort: 8081
   image: mounirbs/spark-python3-java17:3.5.4
